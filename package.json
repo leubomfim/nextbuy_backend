@@ -4,8 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "tsc": "tsc",
-    "build": "tsup src",
+    "build": "tsc",
     "start": "node dist/server.js"
   },
   "keywords": [],
