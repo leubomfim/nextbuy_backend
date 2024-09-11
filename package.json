@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "prisma generate && tsc",
+    "vercel-build": "npx prisma generate",
     "start": "node dist/server.js"
   },
-  "packageManager": "npm@10.5.2",
+  "packageManager": "^npm@10.5.2",
   "keywords": [],
   "author": "",
   "license": "ISC",
