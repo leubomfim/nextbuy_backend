@@ -11,6 +11,7 @@ import { UpdateUserController } from "./controllers/UpdateUserController";
 import { CreateUserController } from "./controllers/CreateUserController";
 import { CreateProductController } from "./controllers/CreateProductController";
 import { auth } from "./middlewares/auth";
+import { ProductGetController } from "./controllers/ProductsGetController";
 
 export async function routes(
   fastify: FastifyInstance,
@@ -50,7 +51,7 @@ export async function routes(
     "/api/products",
     { preHandler: auth },
     async (req: FastifyRequest, reply: FastifyReply) => {
-      return new ListCustomersController().handle(req, reply);
+      return new ProductGetController().handle(req, reply);
     }
   );
 
