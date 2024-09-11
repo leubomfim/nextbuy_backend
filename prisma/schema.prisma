@@ -50,4 +50,26 @@ model Shopping {
   stock       Int
   created_at  DateTime? @default(now())
   updated_at  DateTime? @default(now())
+
+  @@map("shopping")
+}
+
+model Products {
+  id           String    @id @default(uuid()) @map("_id") @db.ObjectId
+  description  String
+  name         String
+  userId       String
+  userName     String
+  userEmail    String
+  stock        Int
+  discount     Int
+  image_url    String
+  freight      Int
+  comments     Json[]    @default([])
+  rating       Int
+  ratingLength Int
+  created_at   DateTime? @default(now())
+  updated_at   DateTime? @default(now())
+
+  @@map("products")
 }

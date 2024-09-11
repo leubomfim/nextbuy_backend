@@ -9,6 +9,7 @@ import { ListCustomersController } from "./controllers/ListCustomersController";
 import { DeleteUserController } from "./controllers/DeleteUserController";
 import { UpdateUserController } from "./controllers/UpdateUserController";
 import { CreateUserController } from "./controllers/CreateUserController";
+import { CreateProductController } from "./controllers/CreateProductController";
 import { auth } from "./middlewares/auth";
 
 export async function routes(
@@ -22,6 +23,12 @@ export async function routes(
       return new CreateUserController().handle(req, reply);
     }
   );
+  fastify.post(
+    "/api/createProduct",
+    async (req: FastifyRequest, reply: FastifyReply) => {
+      return new CreateProductController().handle(req, reply);
+    }
+  );
 
   fastify.get(
     "/",
@@ -33,6 +40,14 @@ export async function routes(
 
   fastify.get(
     "/api/users",
+    { preHandler: auth },
+    async (req: FastifyRequest, reply: FastifyReply) => {
+      return new ListCustomersController().handle(req, reply);
+    }
+  );
+
+  fastify.get(
+    "/api/products",
     { preHandler: auth },
     async (req: FastifyRequest, reply: FastifyReply) => {
       return new ListCustomersController().handle(req, reply);
