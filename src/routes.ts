@@ -24,6 +24,14 @@ export async function routes(
   );
 
   fastify.get(
+    "/",
+    { preHandler: auth },
+    async (req: FastifyRequest, reply: FastifyReply) => {
+      return reply.send({ ok: 'OK'})
+    }
+  );
+
+  fastify.get(
     "/api/users",
     { preHandler: auth },
     async (req: FastifyRequest, reply: FastifyReply) => {
