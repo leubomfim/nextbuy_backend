@@ -12,6 +12,7 @@ import { CreateUserController } from "./controllers/CreateUserController";
 import { CreateProductController } from "./controllers/CreateProductController";
 import { auth } from "./middlewares/auth";
 import { ProductGetController } from "./controllers/ProductsGetController";
+import { LoginController } from "./controllers/LoginController";
 
 export async function routes(
   fastify: FastifyInstance,
@@ -26,7 +27,7 @@ export async function routes(
   fastify.post(
     "/api/login",
     async (req: FastifyRequest, reply: FastifyReply) => {
-      return new CreateUserController().handle(req, reply);
+      return new LoginController().handle(req, reply);
     }
   );
   fastify.post(
