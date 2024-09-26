@@ -17,9 +17,14 @@ export async function routes(
   fastify: FastifyInstance,
   option: FastifyPluginOptions
 ) {
-
   fastify.post(
     "/api/createNewUser",
+    async (req: FastifyRequest, reply: FastifyReply) => {
+      return new CreateUserController().handle(req, reply);
+    }
+  );
+  fastify.post(
+    "/api/login",
     async (req: FastifyRequest, reply: FastifyReply) => {
       return new CreateUserController().handle(req, reply);
     }
@@ -35,7 +40,7 @@ export async function routes(
     "/",
     { preHandler: auth },
     async (req: FastifyRequest, reply: FastifyReply) => {
-      return reply.send({ ok: 'OK'})
+      return reply.send({ ok: "OK" });
     }
   );
 
