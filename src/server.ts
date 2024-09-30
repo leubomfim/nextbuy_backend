@@ -1,14 +1,27 @@
 import Fastify from "fastify";
 import { FastifyRequest, FastifyReply } from "fastify";
 import { routes } from "./routes";
-import cors from "@fastify/cors";
-import fastifyCookie from "@fastify/cookie";
 import { veifyJwt } from "./lib/jwt";
+import { RateLimiterMemory } from 'rate-limiter-flexible';
+import fastifyCookie from "@fastify/cookie";
 import helmet from "@fastify/helmet";
 
 const app = Fastify({ logger: true });
 
-app.addHook('onSend', (request, reply, payload, done) => {
+const rateLimiter = new RateLimiterMemory({
+  points: 5, // Número de requisições permitidas
+  duration: 1, // Por segundo
+})
+
+app.addHook('onRequest', async (request, reply) => {
+  try {
+    await rateLimiter.consume(request.ip);
+  } catch (err) {
+    reply.status(429).send('Muitas requisições');
+  }
+});
+
+app.addHook('onSend', (request: any, reply: any, payload: any, done) => {
   reply.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL || 'http://localhost:5173');
   reply.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   reply.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
@@ -47,12 +60,6 @@ const start = async () => {
   await app.register(fastifyCookie, {
     secret: process.env.COOKIE_SECRET,
     parseOptions: {},
-  });
-  await app.register(import("@fastify/rate-limit"), {
-    max: 10,
-    timeWindow: 5000,
-    cache: 10000,
-    hook: "preHandler",
   });
   await app.register(helmet, {
     contentSecurityPolicy: {
