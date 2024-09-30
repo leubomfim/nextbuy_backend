@@ -7,7 +7,7 @@ interface CreateCustomerProps {
 }
 class CreateUserService {
   async execute({ name, email, password }: CreateCustomerProps) {
-    if (name.length <= 0 || email.length<= 0 || password.length<= 0) {
+    if (name.length <= 0 || email.length <= 0 || password.length <= 0) {
       throw new Error("Preencha todos os campos!");
     }
 
@@ -15,7 +15,7 @@ class CreateUserService {
       data: {
         name,
         email,
-        password: await convertPasswordToHash(password)
+        password: await convertPasswordToHash(password),
       },
     });
     return user;

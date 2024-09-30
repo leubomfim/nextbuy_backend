@@ -5,7 +5,7 @@ import { signJwt } from "../lib/jwt";
 import { verifyHashPassword } from "../lib/hash";
 import CryptoJS from 'crypto-js'
 const CRYPTO_SECRET: any = process.env.CRYPTO_SECRET
-class LoginController {
+class LogoutController {
   async handle(req: FastifyRequest, reply: FastifyReply) {
     const { email, password } = req.body as {
       email: string;
@@ -32,9 +32,9 @@ class LoginController {
         email: decryptedEmail,
       });
 
-    reply.setCookie('userToken', accessToken, {
+    reply.setCookie('token', accessToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production' ? true : false,
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 3 * 24 * 60 * 60,
       path: '/'
@@ -42,4 +42,4 @@ class LoginController {
   }
 }
 
-export { LoginController };
+export { LogoutController };

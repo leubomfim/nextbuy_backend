@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { UpdateUserService } from "../services/UpdateUserService";
-import { sign } from "../lib/jwt";
+import { signJwt } from "../lib/jwt";
 
 class UpdateUserController {
   async handle(req: FastifyRequest, reply: FastifyReply) {
@@ -10,7 +10,7 @@ class UpdateUserController {
 
     await deleteUserService.execute({ id, name, email });
 
-    const acessToken = await sign({
+    const acessToken = await signJwt({
       id: id,
     });
 
