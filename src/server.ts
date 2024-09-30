@@ -49,26 +49,26 @@ const start = async () => {
     cache: 10000,
     hook: "preHandler",
   });
-  await app.register(helmet, {
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "trustedscripts.com"],
-      },
-    },
-    hsts: {
-      maxAge: 31536000,
-      includeSubDomains: true,
-      preload: true,
-    },
-    frameguard: {
-      action: "deny",
-    },
-    noSniff: true,
-    referrerPolicy: {
-      policy: "no-referrer",
-    },
-  });
+  // await app.register(helmet, {
+  //   contentSecurityPolicy: {
+  //     directives: {
+  //       defaultSrc: ["'self'"],
+  //       scriptSrc: ["'self'", "trustedscripts.com"],
+  //     },
+  //   },
+  //   hsts: {
+  //     maxAge: 31536000,
+  //     includeSubDomains: true,
+  //     preload: true,
+  //   },
+  //   frameguard: {
+  //     action: "deny",
+  //   },
+  //   noSniff: true,
+  //   referrerPolicy: {
+  //     policy: "no-referrer",
+  //   },
+  // });
 
   try {
     await app.listen({ port: 3333 });
