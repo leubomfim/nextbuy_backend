@@ -8,6 +8,22 @@ import helmet from "@fastify/helmet";
 
 const app = Fastify({ logger: true });
 
+app.addHook('onSend', (request, reply, payload, done) => {
+  reply.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL || 'http://localhost:5173');
+  reply.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  reply.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  reply.header('Access-Control-Allow-Credentials', 'true');
+  done();
+})
+
+app.options('/*', (request, reply) => {
+  reply.header('Access-Control-Allow-Origin', process.env.FRONTEND_URL || 'http://localhost:5173');
+  reply.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+  reply.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  reply.header('Access-Control-Allow-Credentials', 'true');
+  reply.send();
+});
+
 app.addHook("preHandler", async (req: FastifyRequest, reply: FastifyReply) => {
   const token = req.cookies.token;
   if (!token) {
@@ -27,10 +43,6 @@ app.setErrorHandler((error, req, reply) => {
 });
 
 const start = async () => {
-  await app.register(cors, {
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
-    credentials: true,
-  });
   await app.register(routes);
   await app.register(fastifyCookie, {
     secret: process.env.COOKIE_SECRET,
