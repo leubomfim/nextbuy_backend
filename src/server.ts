@@ -16,7 +16,6 @@ app.addHook("preHandler", async (req: FastifyRequest, reply: FastifyReply) => {
 
   try {
     const decode = await veifyJwt(token);
-    console.log(decode);
     req.user = decode as { email: string };
   } catch (error) {
     return reply.status(401).send("Token invalido!");
@@ -28,7 +27,10 @@ app.setErrorHandler((error, req, reply) => {
 });
 
 const start = async () => {
-  await app.register(cors);
+  await app.register(cors, {
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    credentials: true,
+  });
   await app.register(routes);
   await app.register(fastifyCookie, {
     secret: process.env.COOKIE_SECRET,
@@ -40,7 +42,7 @@ const start = async () => {
     cache: 10000,
     hook: "preHandler",
   });
-  app.register(helmet, {
+  await app.register(helmet, {
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
