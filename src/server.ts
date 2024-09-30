@@ -27,10 +27,17 @@ app.setErrorHandler((error, req, reply) => {
 });
 
 const start = async () => {
+  const allowedOrigins = ["http://localhost:5173", "https://nextbuy-iota.vercel.app/"];
   await app.register(routes);
   app.register(fastifyCors, {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Ajuste para a URL de produção
-    credentials: true // Permite o envio de cookies
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"), false);
+      }
+    },
+    credentials: true,
   });
   await app.register(fastifyCookie, {
     secret: process.env.COOKIE_SECRET,
