@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from "fastify";
 import prismaClient from "../prisma";
 import { signJwt } from "../lib/jwt";
 import { verifyHashPassword } from "../lib/hash";
-import CryptoJS from 'crypto-js';
+import CryptoJS from 'crypto-js'
 const CRYPTO_SECRET: any = process.env.CRYPTO_SECRET
 class LogoutController {
   async handle(req: FastifyRequest, reply: FastifyReply) {

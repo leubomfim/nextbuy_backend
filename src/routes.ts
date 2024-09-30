@@ -10,7 +10,6 @@ import { DeleteUserController } from "./controllers/DeleteUserController";
 import { UpdateUserController } from "./controllers/UpdateUserController";
 import { CreateUserController } from "./controllers/CreateUserController";
 import { CreateProductController } from "./controllers/CreateProductController";
-import { auth } from "./middlewares/auth";
 import { ProductGetController } from "./controllers/ProductsGetController";
 import { LoginController } from "./controllers/LoginController";
 
@@ -39,7 +38,6 @@ export async function routes(
 
   fastify.get(
     "/",
-    { preHandler: auth },
     async (req: FastifyRequest, reply: FastifyReply) => {
       return reply.send({ ok: "OK" });
     }
@@ -47,7 +45,6 @@ export async function routes(
 
   fastify.get(
     "/api/users",
-    { preHandler: auth },
     async (req: FastifyRequest, reply: FastifyReply) => {
       return new ListCustomersController().handle(req, reply);
     }
@@ -55,7 +52,6 @@ export async function routes(
 
   fastify.get(
     "/api/products",
-    { preHandler: auth },
     async (req: FastifyRequest, reply: FastifyReply) => {
       return new ProductGetController().handle(req, reply);
     }
@@ -63,7 +59,6 @@ export async function routes(
 
   fastify.delete(
     "/api/deleteUser",
-    { preHandler: auth },
     async (req: FastifyRequest, reply: FastifyReply) => {
       return new DeleteUserController().handle(req, reply);
     }
