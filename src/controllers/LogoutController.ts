@@ -1,6 +1,5 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import prismaClient from "../prisma";
-import { LoginService } from "../services/LoginService";
 import { signJwt } from "../lib/jwt";
 import { verifyHashPassword } from "../lib/hash";
 import CryptoJS from 'crypto-js'
