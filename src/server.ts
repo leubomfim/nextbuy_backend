@@ -8,20 +8,6 @@ import fastifyCors from "@fastify/cors";
 
 const app = Fastify({ logger: true });
 
-// app.addHook("preHandler", async (req: FastifyRequest, reply: FastifyReply) => {
-//   const token = req.cookies.token;
-//   if (!token) {
-//     return reply.status(401).send("Not authorized!");
-//   }
-
-//   try {
-//     const decode = await veifyJwt(token);
-//     req.user = decode as { email: string };
-//   } catch (error) {
-//     return reply.status(401).send("Token invalido!");
-//   }
-// });
-
 app.setErrorHandler((error, req, reply) => {
   reply.code(400).send({ message: error.message });
 });
