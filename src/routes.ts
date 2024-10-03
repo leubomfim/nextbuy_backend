@@ -55,9 +55,9 @@ export async function routes(
       preHandler: async (req: FastifyRequest, reply: FastifyReply) => {
         const token = req.cookies.token;
         console.log(token)
-        if (!token) {
-          return reply.status(401).send("Not authorized!");
-        }
+        // if (!token) {
+        //   return reply.status(401).send("Not authorized!");
+        // }
       },
     },
     async (req: FastifyRequest, reply: FastifyReply) => {
