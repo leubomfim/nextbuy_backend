@@ -49,7 +49,7 @@ class LoginController {
       .setCookie("userToken", accessToken, {
         httpOnly: true,
         secure: true,
-        sameSite: "lax",
+        sameSite: "strict",
         domain: "localhost",
         maxAge: 3 * 24 * 60 * 60,
         path: "/",
