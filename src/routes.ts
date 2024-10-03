@@ -14,6 +14,7 @@ import { ProductGetController } from "./controllers/ProductsGetController";
 import { LoginController } from "./controllers/LoginController";
 import { createHook } from "async_hooks";
 import { veifyJwt } from "./lib/jwt";
+import { GetUsersController } from "./controllers/GetUserController";
 
 export async function routes(
   fastify: FastifyInstance,
@@ -59,7 +60,7 @@ export async function routes(
       },
     },
     async (req: FastifyRequest, reply: FastifyReply) => {
-      return new ListUsersController().handle(req, reply);
+      return new GetUsersController().handle(req, reply);
     }
   );
 
