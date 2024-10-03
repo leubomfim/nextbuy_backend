@@ -9,20 +9,10 @@ class CreateUserController {
       email: string;
       password: string;
     };
-    const decryptedName = CryptoJS.AES.decrypt(name, CRYPTO_SECRET).toString(
-      CryptoJS.enc.Utf8
-    );
-    const decryptedEmail = CryptoJS.AES.decrypt(email, CRYPTO_SECRET).toString(
-      CryptoJS.enc.Utf8
-    );
-    const decryptedPassword = CryptoJS.AES.decrypt(
-      password,
-      CRYPTO_SECRET
-    ).toString(CryptoJS.enc.Utf8);
 
     const userFind = await prismaClient.user.findUnique({
       where: {
-        email: decryptedEmail,
+        email: email,
       },
     });
 
@@ -32,9 +22,10 @@ class CreateUserController {
 
     const userService = new CreateUserService();
     const user = await userService.execute({
-      name: decryptedName,
-      email: decryptedEmail,
-      password: decryptedPassword,
+      name,
+      email,
+      password,
+      photo: ''
     });
 
     reply.send(user);
