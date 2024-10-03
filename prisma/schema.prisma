@@ -14,64 +14,80 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
   name       String
-  email      String    @unique
+  email      String     @unique
   password   String
-  theme      String?   @default("white")
-  myCart     Json[]    @default([])
-  myShopping Json[]    @default([])
-  isAdmin    Boolean   @default(false)
-  created_at DateTime? @default(now())
-  updated_at DateTime? @default(now())
+  photo      String
+  session    String
+  theme      String?    @default("white")
+  myCart     Json[]     @default([])
+  purchases  Purchase[]
+  isAdmin    Boolean    @default(false)
+  created_at DateTime?  @default(now())
+  updated_at DateTime?  @default(now())
+  Products   Products[] @relation("UserProducts")
 
   @@map("users")
 }
 
-model Customer {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  email      String    @unique
-  status     Boolean
-  created_at DateTime? @default(now())
-  updated_at DateTime? @default(now())
+model Purchase {
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  productName  String
+  userId       String    @db.ObjectId
+  sellerId     String
+  sellerName   String
+  sellerEmail  String
+  sellerphoto  String
+  productId    String    @db.ObjectId
+  stockItem    Int
+  discountItem Int
+  priceItem    Int
+  rating       Float
+  user         User      @relation(fields: [userId], references: [id])
+  product      Products? @relation("id", fields: [productId], references: [id])
+  userProduct  Products? @relation("user", fields: [sellerEmail, sellerName, sellerphoto, rating], references: [userEmail, userName, userPhoto, rating])
+  image_url    String
+  purchasedAt  String
+  created_at   DateTime? @default(now())
+  updated_at   DateTime? @default(now())
+  productsId   String?   @db.ObjectId
 
-  @@map("customers")
-}
-
-model Shopping {
-  id          String    @id @default(uuid()) @map("_id") @db.ObjectId
-  status      Boolean
-  description String
-  name        String
-  userId      String
-  userName    String
-  userEmail   String
-  stock       Int
-  acquired    Boolean
-  created_at  DateTime? @default(now())
-  updated_at  DateTime? @default(now())
-
-  @@map("shopping")
+  @@map("purchases")
 }
 
 model Products {
-  id           String    @id @default(uuid()) @map("_id") @db.ObjectId
+  id           String     @id @default(auto()) @map("_id") @db.ObjectId
   description  String
   name         String
-  userId       String
+  price        Int
+  userId       String     @db.ObjectId
   userName     String
   userEmail    String
+  userPhoto    String
   stock        Int
   discount     Int
   image_url    String
   freight      Int
-  comments     Json[]    @default([])
-  rating       Int
-  ratingLength Int
+  comments     Json[]     @default([])
+  rating       Float
+  reviews      Review[]
   purchased    Int
-  created_at   DateTime? @default(now())
-  updated_at   DateTime? @default(now())
+  created_at   DateTime?  @default(now())
+  updated_at   DateTime?  @default(now())
+  User         User       @relation("UserProducts", fields: [userId], references: [id])
+  Purchase     Purchase[] @relation("id")
+  PurchaseUser Purchase[] @relation("user")
 
+  @@unique([userEmail, userName, userPhoto, rating])
   @@map("products")
+}
+
+model Review {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  rating    Float
+  productId String?   @db.ObjectId
+  Product   Products? @relation(fields: [productId], references: [id])
+
+  @@map("reviews")
 }

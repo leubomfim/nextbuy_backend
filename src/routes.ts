@@ -5,13 +5,15 @@ import {
   FastifyReply,
 } from "fastify";
 // import { CreateCustomerController } from "./controllers/CreateCustomerController";
-import { ListCustomersController } from "./controllers/ListCustomersController";
+import { ListUsersController } from "./controllers/ListCustomersController";
 import { DeleteUserController } from "./controllers/DeleteUserController";
 import { UpdateUserController } from "./controllers/UpdateUserController";
 import { CreateUserController } from "./controllers/CreateUserController";
 import { CreateProductController } from "./controllers/CreateProductController";
 import { ProductGetController } from "./controllers/ProductsGetController";
 import { LoginController } from "./controllers/LoginController";
+import { createHook } from "async_hooks";
+import { veifyJwt } from "./lib/jwt";
 
 export async function routes(
   fastify: FastifyInstance,
@@ -36,17 +38,28 @@ export async function routes(
     }
   );
 
-  fastify.get(
-    "/",
-    async (req: FastifyRequest, reply: FastifyReply) => {
-      return reply.send({ ok: "OK" });
-    }
-  );
+  fastify.get("/", async (req: FastifyRequest, reply: FastifyReply) => {
+    return reply.send({ ok: "OK" });
+  });
 
   fastify.get(
     "/api/users",
     async (req: FastifyRequest, reply: FastifyReply) => {
-      return new ListCustomersController().handle(req, reply);
+      return new ListUsersController().handle(req, reply);
+    }
+  );
+  fastify.get(
+    "/api/getUserProfile",
+    {
+      preHandler: async (req: FastifyRequest, reply: FastifyReply) => {
+        const token = req.cookies.token;
+        if (!token) {
+          return reply.status(401).send("Not authorized!");
+        }
+      },
+    },
+    async (req: FastifyRequest, reply: FastifyReply) => {
+      return new ListUsersController().handle(req, reply);
     }
   );
 

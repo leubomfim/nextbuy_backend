@@ -15,6 +15,7 @@ class CreateUserService {
       data: {
         name,
         email,
+        photo: '',
         password: await convertPasswordToHash(password),
       },
     });
