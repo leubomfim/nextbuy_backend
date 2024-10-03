@@ -1,10 +1,14 @@
 import prismaClient from "../prisma";
 
+interface UserTypeSession {
+  token: string;
+}
+
 class GetUserService {
-  async execute(sessionToken: string) {
+  async execute({ token }: UserTypeSession) {
     const users = await prismaClient.user.findFirst({
       where: {
-        session: sessionToken,
+        session: token,
       },
     });
     return users;

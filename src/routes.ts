@@ -51,15 +51,6 @@ export async function routes(
   );
   fastify.get(
     "/api/getUserProfile",
-    {
-      preHandler: async (req: FastifyRequest, reply: FastifyReply) => {
-        const token = req.cookies.token;
-        console.log(token)
-        // if (!token) {
-        //   return reply.status(401).send("Not authorized!");
-        // }
-      },
-    },
     async (req: FastifyRequest, reply: FastifyReply) => {
       return new GetUsersController().handle(req, reply);
     }
