@@ -48,8 +48,8 @@ class LoginController {
     reply
       .setCookie("userToken", accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production" ? true : false,
-        sameSite: "strict",
+        secure: true,
+        sameSite: "lax",
         maxAge: 3 * 24 * 60 * 60,
         path: "/",
       })
