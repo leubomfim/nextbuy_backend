@@ -50,6 +50,7 @@ class LoginController {
         httpOnly: true,
         secure: true,
         sameSite: "lax",
+        domain: "localhost",
         maxAge: 3 * 24 * 60 * 60,
         path: "/",
       })
