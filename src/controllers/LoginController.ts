@@ -48,11 +48,9 @@ class LoginController {
     reply
       .setCookie("userToken", accessToken, {
         httpOnly: true,
-        secure: true,
-        sameSite: "strict",
-        domain: "localhost",
+        secure: process.env.NODE_ENV === "production" ? true : false,
+        sameSite: "none",
         maxAge: 3 * 24 * 60 * 60,
-        path: "/",
       })
       .status(200)
       .send("Login with success!");
