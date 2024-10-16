@@ -13,9 +13,9 @@ app.setErrorHandler((error, req, reply) => {
 });
 
 const start = async () => {
-  const allowedOrigins = ["http://localhost:5173", "https://nextbuy-iota.vercel.app", "https://nextbuy-backend-two.vercel.app/"];
+  const allowedOrigins = [process.env.ORIGIN_CORS_LOCAL, process.env.ORIGIN_CORS_BACKEND, process.env.FRONTEND_URL];
   await app.register(routes);
-  app.register(fastifyCors, {
+  await app.register(fastifyCors, {
     origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
