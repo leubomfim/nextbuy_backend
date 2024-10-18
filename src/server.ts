@@ -5,6 +5,7 @@ import fastifyCookie from "@fastify/cookie";
 import { veifyJwt } from "./lib/jwt";
 import helmet from "@fastify/helmet";
 import fastifyCors from "@fastify/cors";
+import websocketPlugin from '@fastify/websocket'
 
 const app = Fastify({ logger: true });
 
@@ -14,7 +15,6 @@ app.setErrorHandler((error, req, reply) => {
 
 const start = async () => {
   const allowedOrigins = [process.env.ORIGIN_CORS_LOCAL, process.env.ORIGIN_CORS_BACKEND, process.env.FRONTEND_URL];
-  await app.register(routes);
   await app.register(fastifyCors, {
     origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
@@ -25,6 +25,7 @@ const start = async () => {
     },
     credentials: true,
   });
+  await app.register(websocketPlugin);
   await app.register(fastifyCookie, {
     secret: process.env.COOKIE_SECRET,
     parseOptions: {},
@@ -37,9 +38,11 @@ const start = async () => {
   });
   await app.register(helmet, {
     contentSecurityPolicy: {
+      useDefaults: true,
       directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "trustedscripts.com"],
+        'img-src': ["'self'", 'data:', 'https:'],
+        'default-src': ["'self'"],
+        'script-src': ["'self'", "trustedscripts.com"],
       },
     },
     hsts: {
@@ -55,7 +58,7 @@ const start = async () => {
       policy: "no-referrer",
     },
   });
-
+  await app.register(routes);
   try {
     await app.listen({ port: 3333 });
   } catch (err) {

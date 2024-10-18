@@ -15,6 +15,7 @@ import { LoginController } from "./controllers/LoginController";
 import { createHook } from "async_hooks";
 import { veifyJwt } from "./lib/jwt";
 import { GetUsersController } from "./controllers/GetUserController";
+import prismaClient from "./prisma";
 
 export async function routes(
   fastify: FastifyInstance,
@@ -62,6 +63,20 @@ export async function routes(
       return new ProductGetController().handle(req, reply);
     }
   );
+
+  fastify.get('/ws', { websocket: true }, (connection, req) => {
+    connection.socket.on('message', async (message: string) => {
+      const data = JSON.parse(message);
+      if(data.action === "getItems") {
+        const items = await prismaClient.products.findMany()
+        connection.socket.send(JSON.stringify({
+          action: "getItems",
+          data: items
+        }))
+      } 
+    });
+  });
+  
 
   fastify.delete(
     "/api/deleteUser",
