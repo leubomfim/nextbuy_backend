@@ -64,20 +64,6 @@ export async function routes(
     }
   );
 
-  fastify.get('/ws', { websocket: true }, (connection, req) => {
-    connection.socket.on('message', async (message: string) => {
-      const data = JSON.parse(message);
-      if(data.action === "getItems") {
-        const items = await prismaClient.products.findMany()
-        connection.socket.send(JSON.stringify({
-          action: "getItems",
-          data: items
-        }))
-      } 
-    });
-  });
-  
-
   fastify.delete(
     "/api/deleteUser",
     async (req: FastifyRequest, reply: FastifyReply) => {

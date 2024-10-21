@@ -26,6 +26,7 @@ model User {
   isAdmin    Boolean    @default(false)
   created_at DateTime?  @default(now())
   updated_at DateTime?  @default(now())
+  buyQuantity Int?
   Products   Products[] @relation("UserProducts")
 
   @@map("users")
@@ -71,7 +72,8 @@ model Products {
   freight      Int
   comments     Json[]     @default([])
   rating       Float
-  reviews      Review[]
+  ratingLenght Int
+  reviews      Json[] @default([])
   purchased    Int
   created_at   DateTime?  @default(now())
   updated_at   DateTime?  @default(now())
@@ -87,7 +89,6 @@ model Review {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   rating    Float
   productId String?   @db.ObjectId
-  Product   Products? @relation(fields: [productId], references: [id])
 
   @@map("reviews")
 }

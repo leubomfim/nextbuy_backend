@@ -6,34 +6,38 @@ class CreateProductController {
   async handle(req: FastifyRequest, reply: FastifyReply) {
     console.log(req.body);
     const {
-      name,
       description,
+      name,
+      price,
       userId,
       userName,
       userEmail,
+      userPhoto,
       stock,
       discount,
-      comments,
-      freight,
       image_url,
+      freight,
       rating,
-      ratingLength,
+      ratingLenght,
+      purchased,
     } = req.body as ProductType;
 
     const userService = new CreateProductService();
     const user = await userService.execute({
-      name,
       description,
+      name,
+      price,
       userId,
       userName,
       userEmail,
+      userPhoto,
       stock,
       discount,
-      comments,
-      freight,
       image_url,
+      freight,
       rating,
-      ratingLength,
+      ratingLenght,
+      purchased,
     });
 
     reply.send(user);

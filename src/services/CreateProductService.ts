@@ -1,42 +1,41 @@
 import prismaClient from "../prisma";
-import bcrypt from 'bcrypt'
 import { ProductType } from "../types/product";
 const SALT_ROUNDS = 10
 
 class CreateProductService {
   async execute({
-    name,
     description,
+    name,
+    price,
     userId,
     userName,
     userEmail,
+    userPhoto,
     stock,
     discount,
-    comments,
-    freight,
     image_url,
+    freight,
     rating,
-    ratingLength,
+    ratingLenght,
+    purchased,
   }: ProductType) {
-    // if (name.length <= 0 || email.length<= 0 || password.length<= 0) {
-    //   throw new Error("Preencha todos os campos!");
-    // }
-
 
     const user = await prismaClient.products.create({
       data: {
-        name,
         description,
+        name,
+        price,
         userId,
         userName,
         userEmail,
+        userPhoto,
         stock,
         discount,
-        comments,
-        freight,
         image_url,
+        freight,
         rating,
-        ratingLength,
+        ratingLenght,
+        purchased,
       }
     });
     return user;
