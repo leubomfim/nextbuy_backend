@@ -26,7 +26,31 @@ export async function routes(
     async (req: FastifyRequest, reply: FastifyReply) => {
       return new CreateUserController().handle(req, reply);
     }
-  );
+  ),
+  fastify.get('/ws', { websocket: true }, (connection, req) => {
+    connection.socket.on('message', async (message: string) => {
+      const data = JSON.parse(message);
+      console.log('Mensagem recebida:', data);
+  
+      if (data.action === 'updateProduct') {
+        // const updatedProduct = await prisma.product.update({
+        //   where: { id: data.id },
+        //   data: data,
+        // });
+  
+        // Emite atualização para todos os clientes conectados
+        fastify.websocketServer.clients.forEach((client: any) => {
+          if (client.readyState === 1) {
+            client.send(JSON.stringify({ action: 'productUpdated', product: {ok: 'Oi'} }));
+          }
+        });
+      }
+    });
+  
+    connection.socket.on('close', () => {
+      console.log('Cliente desconectado');
+    });
+  }),
   fastify.post(
     "/api/login",
     async (req: FastifyRequest, reply: FastifyReply) => {

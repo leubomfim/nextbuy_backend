@@ -1,8 +1,6 @@
-import Fastify from "fastify";
-import { FastifyRequest, FastifyReply } from "fastify";
+import Fastify, { FastifyInstance } from "fastify";
 import { routes } from "./routes";
 import fastifyCookie from "@fastify/cookie";
-import { veifyJwt } from "./lib/jwt";
 import helmet from "@fastify/helmet";
 import fastifyCors from "@fastify/cors";
 import websocketPlugin from '@fastify/websocket'
@@ -25,11 +23,11 @@ const start = async () => {
     },
     credentials: true,
   });
-  await app.register(websocketPlugin);
   await app.register(fastifyCookie, {
     secret: process.env.COOKIE_SECRET,
     parseOptions: {},
   });
+  await app.register(websocketPlugin);
   await app.register(import("@fastify/rate-limit"), {
     max: 10,
     timeWindow: 5000,
@@ -58,12 +56,11 @@ const start = async () => {
       policy: "no-referrer",
     },
   });
-  await app.register(routes);
+  await app.register(routes); 
   try {
     await app.listen({ port: 3333 });
   } catch (err) {
     process.exit(1);
   }
 };
-
 start();

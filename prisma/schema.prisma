@@ -27,8 +27,7 @@ model User {
   created_at DateTime?  @default(now())
   updated_at DateTime?  @default(now())
   buyQuantity Int?
-  Products   Products[] @relation("UserProducts")
-
+  
   @@map("users")
 }
 
@@ -46,8 +45,6 @@ model Purchase {
   priceItem    Int
   rating       Float
   user         User      @relation(fields: [userId], references: [id])
-  product      Products? @relation("id", fields: [productId], references: [id])
-  userProduct  Products? @relation("user", fields: [sellerEmail, sellerName, sellerphoto, rating], references: [userEmail, userName, userPhoto, rating])
   image_url    String
   purchasedAt  String
   created_at   DateTime? @default(now())
@@ -77,11 +74,7 @@ model Products {
   purchased    Int
   created_at   DateTime?  @default(now())
   updated_at   DateTime?  @default(now())
-  User         User       @relation("UserProducts", fields: [userId], references: [id])
-  Purchase     Purchase[] @relation("id")
-  PurchaseUser Purchase[] @relation("user")
 
-  @@unique([userEmail, userName, userPhoto, rating])
   @@map("products")
 }
 
