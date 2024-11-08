@@ -3,13 +3,26 @@ import { routes } from "./routes";
 import fastifyCookie from "@fastify/cookie";
 import helmet from "@fastify/helmet";
 import fastifyCors from "@fastify/cors";
-import websocketPlugin from '@fastify/websocket'
 
 const app = Fastify({ logger: true });
 
 app.setErrorHandler((error, req, reply) => {
   reply.code(400).send({ message: error.message });
 });
+
+app.addHook('preHandler', async (request, reply) => {
+  const authHeader = request.headers["authorization"];
+  if (!authHeader) {
+    reply.code(401).send({ error: "You don't have authorization!" });
+    return;
+  }
+  const token = authHeader.split(" ")[1];
+  if (token !== process.env.BEARER_TOKEN_SECRET) {
+    reply.code(403).send({ error: "You don't have authorization!" });
+    return;
+  }
+});
+
 
 const start = async () => {
   const allowedOrigins = [process.env.ORIGIN_CORS_LOCAL, process.env.ORIGIN_CORS_BACKEND, process.env.FRONTEND_URL];
@@ -27,7 +40,6 @@ const start = async () => {
     secret: process.env.COOKIE_SECRET,
     parseOptions: {},
   });
-  await app.register(websocketPlugin);
   await app.register(import("@fastify/rate-limit"), {
     max: 10,
     timeWindow: 5000,
@@ -55,7 +67,7 @@ const start = async () => {
     referrerPolicy: {
       policy: "no-referrer",
     },
-  });
+  })
   await app.register(routes); 
   try {
     await app.listen({ port: 3333 });
