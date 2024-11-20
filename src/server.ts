@@ -25,7 +25,7 @@ app.addHook('preHandler', async (request, reply) => {
 
 
 const start = async () => {
-  const allowedOrigins = [process.env.ORIGIN_CORS_LOCAL, process.env.ORIGIN_CORS_BACKEND, process.env.FRONTEND_URL];
+  const allowedOrigins = [process.env.ORIGIN_CORS_LOCAL, process.env.ORIGIN_CORS_LOCAL_NEXT, process.env.ORIGIN_CORS_BACKEND, process.env.FRONTEND_URL];
   await app.register(fastifyCors, {
     origin: (origin, callback) => {
       if (!origin || allowedOrigins.includes(origin)) {
