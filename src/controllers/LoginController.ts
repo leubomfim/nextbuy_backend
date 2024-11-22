@@ -34,7 +34,7 @@ class LoginController {
       userFind.password,
       decryptedPassword
     );
-    if (!isMatch) return reply.status(400).send("Verifique seus dados.");
+    if (!isMatch) return reply.status(400).send("Verify your credentials!");
 
     const accessToken = await signJwt({
       userId: userFind.id,
